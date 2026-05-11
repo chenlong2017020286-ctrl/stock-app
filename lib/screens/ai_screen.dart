@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/ai_service.dart';
+import '../services/api_config_service.dart';
 import '../theme/app_theme.dart';
 
 class AiScreen extends StatefulWidget {
@@ -125,14 +126,29 @@ class _AiScreenState extends State<AiScreen> {
       padding: const EdgeInsets.all(20),
       children: [
         const SizedBox(height: 40),
-        const Icon(Icons.auto_awesome, size: 48, color: AppTheme.primary),
-        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.deepPurple.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.deepPurple.withValues(alpha: 0.2)),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.auto_awesome, size: 14, color: Colors.deepPurple),
+              SizedBox(width: 4),
+              Text('AI 实时分析 · 真实数据', style: TextStyle(fontSize: 11, color: Colors.deepPurple, fontWeight: FontWeight.w500)),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
         const Text('AI 投资助手', textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        const Text('随时提问市场行情、基金分析、投资策略',
+        Text('基于 ${ApiConfigService.instance.isConfigured ? 'DeepSeek' : '（需先配置 API）'} 的实时投资分析',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+            style: TextStyle(fontSize: 13, color: ApiConfigService.instance.isConfigured ? AppTheme.textSecondary : Colors.orange)),
         const SizedBox(height: 32),
         const Text('试试这些问题：', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),

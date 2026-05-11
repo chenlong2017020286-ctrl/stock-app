@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/stock_data.dart';
 import '../widgets/stock_tile.dart';
+import '../widgets/data_badge.dart';
 import '../theme/app_theme.dart';
 
 class FundScreen extends StatefulWidget {
@@ -29,7 +30,10 @@ class _FundScreenState extends State<FundScreen> {
               children: [
                 Text('自选基金', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                 Spacer(),
-                Text('点击查看分析', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                DataBadge(source: DataSource.demo),
+                SizedBox(width: 8),
+                Icon(Icons.auto_awesome, size: 12, color: Colors.deepPurple),
+                Text('AI分析', style: TextStyle(fontSize: 11, color: Colors.deepPurple)),
               ],
             ),
           );
@@ -54,22 +58,46 @@ class _FundScreenState extends State<FundScreen> {
 
   Widget _buildFilterBar() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-      child: SizedBox(
-        height: 36,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: ['全部', '股票型', '混合型', '指数型', '债券型'].map((name) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: ChoiceChip(
-                label: Text(name, style: const TextStyle(fontSize: 12)),
-                selected: name == '全部',
-                visualDensity: VisualDensity.compact,
-              ),
-            );
-          }).toList(),
-        ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.orange.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.science_outlined, size: 14, color: Colors.orange[700]),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text('基金净值为演示数据。点击底部"AI 分析"可获取真实分析。',
+                      style: TextStyle(fontSize: 11, color: Colors.orange[800])),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 36,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: ['全部', '股票型', '混合型', '指数型', '债券型'].map((name) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(name, style: const TextStyle(fontSize: 12)),
+                    selected: name == '全部',
+                    visualDensity: VisualDensity.compact,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -98,8 +126,7 @@ class _FundDetailSheet extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(fund.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-              Icon(fund.isUp ? Icons.trending_up : Icons.trending_down,
-                  color: fund.isUp ? AppTheme.up : AppTheme.down, size: 28),
+              const DataBadge(source: DataSource.demo),
             ],
           ),
           const SizedBox(height: 4),
@@ -128,10 +155,17 @@ class _FundDetailSheet extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(context);
+                // Switch to AI tab - this would need a callback mechanism
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('切换到"AI"标签页提问基金分析'), behavior: SnackBarBehavior.floating),
+                );
+              },
               icon: const Icon(Icons.auto_awesome),
-              label: const Text('AI 分析该基金'),
+              label: const Text('用 AI 分析该基金（真实数据）'),
               style: FilledButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),

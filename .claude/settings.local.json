@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(export PATH=\"/c/tools/flutter/bin:$\")",
+      "Bash(export PUB_HOSTED_URL=*)",
+      "Bash(export FLUTTER_STORAGE_BASE_URL=*)",
+      "Bash(flutter pub *)",
+      "Bash(flutter analyze *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(gh workflow *)",
+      "Bash(gh run *)"
+    ]
+  }
+}

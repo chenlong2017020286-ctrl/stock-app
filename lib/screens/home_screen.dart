@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../models/stock_data.dart';
 import '../services/ai_service.dart';
 import '../widgets/stock_tile.dart';
+import '../widgets/data_badge.dart';
 import '../theme/app_theme.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -46,13 +47,42 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Demo notice banner
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.science_outlined, size: 16, color: Colors.orange[700]),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text('以下持仓数据为演示样本。AI 速览和市场分析使用真实数据。',
+                          style: TextStyle(fontSize: 12, color: Colors.orange[800])),
+                    ),
+                    Icon(Icons.touch_app, size: 14, color: Colors.orange[400]),
+                  ],
+                ),
+              ),
+
               // Asset card
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      const Text('总资产', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+                      Row(
+                        children: [
+                          const Text('总资产', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+                          const Spacer(),
+                          const DataBadge(source: DataSource.demo),
+                        ],
+                      ),
                       const SizedBox(height: 4),
                       Text(fmt.format(totalValue),
                           style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
@@ -96,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 12),
 
-              // AI Daily Brief
+              // AI Daily Brief - 真实数据
               Card(
                 child: InkWell(
                   onTap: _loadBrief,
@@ -112,8 +142,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(width: 6),
                             const Text('AI 市场速览', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                             const Spacer(),
-                            if (_loadingBrief)
+                            const DataBadge(source: DataSource.ai),
+                            if (_loadingBrief) ...[
+                              const SizedBox(width: 8),
                               const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                            ],
                           ],
                         ),
                         const SizedBox(height: 8),
@@ -126,7 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 16),
 
-              const Text('持有基金', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+              Row(
+                children: [
+                  const Text('持有基金', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  const Spacer(),
+                  const DataBadge(source: DataSource.demo),
+                ],
+              ),
               const SizedBox(height: 8),
               ..._holdings.map((h) => HoldingCard(holding: h)),
             ],
